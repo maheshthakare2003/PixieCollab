@@ -1,28 +1,35 @@
-const express = require("express");
-const cors = require("cors");
-const path = require("path");
-const app = express();
-const trial = require("./Models/trialUser.js");
-const connector = require("./Models/connect.js");
+const cors = require('cors');
+const path = require('path');
+const dotenv = require('dotenv');
+const mongoose = require('mongoose');
 
-require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
-app.use(cors());
-connector();
-
-app.get("/", (req, res) => {
-  const newTrial = new trial({ name: "2" });
-  const t = async () => {
-    try {
-      await newTrial.save();
-      console.log("Saved")
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  t();
-  res.status(200).json({ message: "Let's start!" });
+process.on('uncaughtException', err => {
+  console.log(err.name, err.message);
+  console.log('Uncaught Excception 🔥🔥 Shutting down');
+  process.exit(1);
 });
 
-app.listen(5500, () => {
-  console.log("Server Listening on port 5500");
+dotenv.config({ path: `${__dirname}/../config.env` });
+const app = require('./app');
+
+const DB = process.env.DATABASE.replace(
+  '<PASSWORD>',
+  process.env.DATABASE_PASSWORD
+);
+mongoose.connect(DB).then(() => console.log('DB connection established'));
+
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+app.use(cors());
+
+const port = process.env.PORT || 5500;
+const server = app.listen(port, () => {
+  console.log('Server Listening on port 5500');
+});
+
+process.on('unhandledRejection', err => {
+  console.log(err.name, err.message);
+  console.log('Unhandled rejection 🔥🔥 Shutting down');
+  server.close(() => {
+    process.exit(1);
+  });
 });
