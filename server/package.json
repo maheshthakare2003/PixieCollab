@@ -19,7 +19,6 @@
   "homepage": "https://github.com/aomwankhede/PixieCollab#readme",
   "dependencies": {
     "cloudinary": "^1.41.3",
-  "dependencies": { 
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
@@ -47,5 +46,4 @@
   "engines": {
     "node": ">=10.0.0"
   }
-}
 }
