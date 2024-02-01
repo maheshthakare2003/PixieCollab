@@ -17,7 +17,8 @@
     "url": "https://github.com/aomwankhede/PixieCollab/issues"
   },
   "homepage": "https://github.com/aomwankhede/PixieCollab#readme",
-  "dependencies": { 
+  "dependencies": {
+    "cloudinary": "^1.41.3",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
