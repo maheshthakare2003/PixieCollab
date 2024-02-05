@@ -1,10 +1,10 @@
 const path = require("path");
 const Video = require("../../Models/Video.js");
 const cloudinary = require("cloudinary").v2;
-
+const fs = require("fs");
+const { pipeline } = require("stream");
 
 const uploadToCloudinary = async (req, resp) => {
-    console.log("Started")
   try {
     cloudinary.config({
       cloud_name: process.env.cloud_name,
@@ -12,6 +12,8 @@ const uploadToCloudinary = async (req, resp) => {
       api_secret: process.env.api_secret,
     });
     const { name, description, links } = req.body;
+    console.log(name, description, links);
+    console.log("started");
     const uploadResult = await new Promise((resolve, reject) => {
       cloudinary.uploader.upload_large(
         req.file.path,
@@ -40,7 +42,31 @@ const uploadToCloudinary = async (req, resp) => {
   }
 };
 
-module.exports = { uploadToCloudinary };
+const streamFromCloudinary = async (req, resp) => {
+  try {
+    const f = async () => {
+      const { got } = await import("got");
+      console.log(got);
+      return got;
+    };
+    const got = await f();
+    const { url } = req.body;
+    const response = await got.stream(url);
+    const writeStream = fs.createWriteStream(
+      path.join(__dirname, "../../public/temp1.mp4")
+    );
+    const data = await pipeline(response, writeStream, () => {
+      console.log("cb is running ");
+    });
+    console.log("streaming successfully");
+    resp.status(200).json({ data: "Streaming Successfully", value: data });
+  } catch (error) {
+    console.error(error);
+    resp.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { uploadToCloudinary, streamFromCloudinary };
 
 /*
 {

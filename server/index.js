@@ -23,8 +23,9 @@ dotenv.config({ path: path.resolve(__dirname, "../.env") });
 app.use(cors());
 
 const port = process.env.PORT || 5501;
+
 const server = app.listen(port, () => {
-  console.log("Server Listening on port 5500");
+  console.log(`Server Listening on port ${port}`);
 });
 
 process.on("unhandledRejection", (err) => {
