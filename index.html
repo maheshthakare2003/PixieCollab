@@ -1,40 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
-</head>
-<body>
-  <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
-    <input type="file" id="fileInput" name="file" />
-    <input type="text" id="nameInput" name="name" placeholder="Video Name" />
-    <input type="text" id="descriptionInput" name="description" placeholder="Video Description" />
-    <input type="text" id="linksInput" name="links" placeholder="Video Links" />
-    <input type="submit" value="Upload" />
-  </form>
-  <script>
-    document.getElementById("uploadForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form
+      id="uploadForm"
+      action="/upload"
+      method="post"
+      enctype="multipart/form-data"
+    >
+      <input type="file" id="fileInput" name="file" />
+      <input type="text" id="nameInput" name="name" placeholder="Video Name" />
+      <input
+        type="text"
+        id="descriptionInput"
+        name="description"
+        placeholder="Video Description"
+      />
+      <input
+        type="text"
+        id="linksInput"
+        name="links"
+        placeholder="Video Links"
+      />
+      <input type="submit" value="Upload" />
+    </form>
+    <h1>Video Streaming Example</h1>
+    <video controls>
+      <source src="http://localhost:5501/temp1.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+    <script>
+      document
+        .getElementById("uploadForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
 
-      const form = document.getElementById("uploadForm");
-      const formData = new FormData(form);
+          const form = document.getElementById("uploadForm");
+          const formData = new FormData(form);
 
-      try {
-        const response = await fetch("http://localhost:5501/stream/upload", {
-          method: "POST",
-          body: formData,
+          try {
+            const response = await fetch(
+              "http://localhost:8000/stream/upload",
+              {
+                method: "POST",
+                body: formData,
+              }
+            );
+
+            if (response.ok) {
+              console.log("File uploaded successfully");
+            } else {
+              console.error("Failed to upload file");
+            }
+
+            const fileName = formData.name;
+          } catch (error) {
+            console.error("Error uploading file", error);
+          }
         });
-
-        if (response.ok) {
-          console.log("File uploaded successfully");
-        } else {
-          console.error("Failed to upload file");
-        }
-      } catch (error) {
-        console.error("Error uploading file", error);
-      }
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>
