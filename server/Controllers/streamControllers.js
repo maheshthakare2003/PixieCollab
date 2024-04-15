@@ -1,5 +1,5 @@
 const path = require("path");
-const Video = require("../../Models/Video.js");
+const Video = require("../Models/Video.js");
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 const { pipeline } = require("stream");

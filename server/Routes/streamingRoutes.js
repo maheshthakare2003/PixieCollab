@@ -3,7 +3,7 @@ const multer = require("multer");
 const path = require('path');
 const router = express.Router();
 router.use(express.json());
-const { uploadToCloudinary,streamFromCloudinary } = require("../../Controllers/Streaming/index.js");
+const { uploadToCloudinary,streamFromCloudinary } = require("../Controllers/streamControllers.js");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
