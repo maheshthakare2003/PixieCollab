@@ -31,6 +31,10 @@ const editorSchema = mongoose.Schema({
       message: 'Passwords do not match'
     }
   },
+  TYPE: {
+    type: String,
+    default: 'Editor'
+  },
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date

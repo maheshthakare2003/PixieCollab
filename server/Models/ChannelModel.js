@@ -41,6 +41,10 @@ const channelSchema = mongoose.Schema({
       message: 'Passwords do not match'
     }
   },
+  TYPE: {
+    type: String,
+    default: 'Channel'
+  },
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date

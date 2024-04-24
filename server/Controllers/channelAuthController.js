@@ -6,7 +6,7 @@ const Channel = require('../Models/ChannelModel');
 const AppError = require('../utils/appError');
 
 const signToken = id => {
-  return jwt.sign({ id: id }, process.env.JWT_SECRET, {
+  return jwt.sign({ id: id, isEditor: false }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN
   });
 };
@@ -25,7 +25,8 @@ const createSendToken = (channel, statusCode, res) => {
     status: 'success',
     token,
     data: {
-      channel
+      channel,
+      isEditor: false
     }
   });
 };
@@ -37,21 +38,22 @@ exports.signup = catchAsync(async (req, res, next) => {
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm
+    passwordConfirm: req.body.passwordConfirm,
+    type: req.body.type
   });
 
   createSendToken(newChannel, 201, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
-  const { channelUserName, password } = req.body;
+  const { email, password } = req.body;
   //1) Check if Both email and password is provided
-  if (!channelUserName || !password) {
+  if (!email || !password) {
     return next(new AppError('Please Provide both email and password', 400));
   }
   //2)check if user exists and password is correct
   const channel = await Channel.findOne({
-    channelUserName: channelUserName
+    email: email
   }).select('+password'); //password is hidden that's why explicitly mentioned to show it
 
   if (

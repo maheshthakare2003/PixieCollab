@@ -12,6 +12,7 @@ import About from "./components/About.jsx";
 import ChatDashboard from "./components/ChatDashboard.jsx";
 import Contact from "./components/Contact.jsx";
 import HomePage from "./components/HomePage.jsx";
+import Login from "./components/Login.jsx";
 import Layout from "./Layout";
 
 import "./index.css";
@@ -29,6 +30,7 @@ const router = createBrowserRouter(
       <Route path="about/" element={<About />} />
       <Route path="contact/" element={<Contact />} />
       <Route path="chat/" element={<ChatDashboard />} />
+      <Route path="login/" element={<Login />} />
     </Route>
   )
 );
