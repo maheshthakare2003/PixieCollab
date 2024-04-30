@@ -20,9 +20,6 @@ import "./index.css";
 import { Provider } from 'react-redux';
 import store from "./app/store.js";
 
-import { io } from "socket.io-client";
-const socket = io("127.0.0.1:5505");
-
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
@@ -41,20 +38,3 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   </Provider>
 );
 
-
-//Socket Code
-socket.on("joinAlso", (channelUsername, editorEmail) => {
-  if (isEditor && isEditor.email === editorEmail) {
-    socket.emit("finalJoin", (channelUsername, editorEmail));
-  } else if (isChannel && isChannel.channelUserName === channelUsername) {
-    socket.emit("finalJoin", (channelUsername, editorEmail));
-  }
-});
-
-export const joinRoom = (channelUsername, editorEmail) => {
-  socket.emit("join", channelUsername, editorEmail);
-};
-
-export const sendMessage = (message, channelUsername, editorEmail) => {
-  socket.emit("sendMessage", message, channelUsername, editorEmail);
-};

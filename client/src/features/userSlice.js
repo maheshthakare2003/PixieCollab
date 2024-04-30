@@ -1,8 +1,8 @@
-import {createSlice,nanoid} from '@reduxjs/toolkit';
+import {createSlice} from '@reduxjs/toolkit';
 const initialState = {
-    currUser : 'Aom',
-    streak : 0,
+    currUser : null,
     isEditor : true,
+    isLogin : false,
 }
 const userSlice = createSlice({
     name:"currUser",
@@ -22,10 +22,13 @@ const userSlice = createSlice({
       decrease:(state)=>{
         return {...state, streak:state.streak-1}
       },
+      intialize:(state, action)=>{
+        return action.payload
+      },
     }
 })
 
-export const {setCurrUser,setIsEditor,increase,decrease} = userSlice.actions; 
+export const {setCurrUser,setIsEditor,increase,decrease,intialize} = userSlice.actions; 
 export default userSlice.reducer;   
 
 

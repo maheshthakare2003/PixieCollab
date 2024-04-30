@@ -1,7 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-
+import { useNavigate } from 'react-router-dom';
+import { useSelector,useDispatch } from "react-redux";
+import {intialize} from "../features/userSlice.js"
 const Login = () => {
+  const dispatch = useDispatch();
+  const nav = useNavigate();
+  const isLogin = useSelector((state) => state.isLogin);
   const [login, setLogin] = useState(true);
   const [formData, setFormData] = useState({
     email: "",
@@ -9,7 +14,8 @@ const Login = () => {
     channelUserName: "",
     channelPasswd: "",
     name: "",
-    type: "editor"
+    type: "editor",
+    passwordConfirm: "",
   });
 
   const toggleForm = () => {
@@ -30,18 +36,22 @@ const Login = () => {
       let response;
       if (login) {
         if(formData.type === "channel"){
-        response = await axios.post("http://localhost:5501/channel/login", {
-          email: formData.email,
-          password: formData.password,
-        });
+          response = await axios.post("http://localhost:5501/channel/login", {
+            email: formData.email,
+            password: formData.password,
+          });
+          console.log("1",response);
+          dispatch(intialize({isEditor:response.data.data.isEditor,currUser:response.data.data.channel,isLogin:response.data.status==="success"}))
       } else if(formData.type === "editor"){
         response = await axios.post("http://localhost:5501/editor/login", {
           email: formData.email,
           password: formData.password,
         });
+        console.log("2",response);
+        dispatch(intialize({isEditor:response.data.data.isEditor,currUser:response.data.data.editor,isLogin:response.data.status==="success"}))
       }
-      } else {
-        if(formData.type === "channel"){
+    } else {
+      if(formData.type === "channel"){
         response = await axios.post("http://localhost:5501/channel/signup", {
           channelUserName: formData.channelUserName,
           channelPasswd: formData.channelPasswd,
@@ -51,30 +61,38 @@ const Login = () => {
           passwordConfirm: formData.passwordConfirm,
           TYPE: formData.type
         });
+        console.log("3",response);
+        dispatch(intialize({isEditor:response.data.data.isEditor,currUser:response.data.data.channel,isLogin:response.data.status==="success"}))
       }
-        else if(formData.type === "editor"){
-        response = await axios.post("http://localhost:5501/editor/login", {
+      else if(formData.type === "editor"){
+        response = await axios.post("http://localhost:5501/editor/signup", {
           name: formData.name,
           email: formData.email,
           password: formData.password,
           passwordConfirm: formData.passwordConfirm,
           TYPE: formData.type
         });
+        console.log("4",response);
+        dispatch(intialize({isEditor:response.data.data.isEditor,currUser:response.data.data.editor,isLogin:response.data.status==="success"}))
       }
-      }
-      // Assuming the token is received in the response
-      const token = response.data.token;
-      // Store token in local storage
-      localStorage.setItem("token", token);
-      // Redirect user or update UI
-      // create alert after successful login
+    }
+    // Assuming the token is received in the response
+    const token = response.data.token;
+    // Store token in local storage
+    localStorage.setItem("token", token);
+    // Redirect user or update UI
+    // create alert after successful login
       alert("Login successful!");
-      toggleForm();
+      nav('/')
     } catch (error) {
       // Handle error (e.g., display error message)
     }
   };
-
+  useEffect(() => {
+    if(isLogin==true){
+      nav('/');
+    }
+  }, []);
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="bg-gray-100 p-6 rounded shadow-md w-96">
@@ -131,7 +149,7 @@ const Login = () => {
               </div>
               <div className="mb-4">
                 <label htmlFor="confirmPassword" className="block text-gray-700">Confirm Password</label>
-                <input type="password" id="confirmPassword" className="form-input mt-1 block w-full" onChange={handleChange} />
+                <input type="password" id="passwordConfirm" className="form-input mt-1 block w-full" onChange={handleChange} />
               </div>
             </>
           )}

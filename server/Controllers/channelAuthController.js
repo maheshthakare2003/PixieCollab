@@ -32,6 +32,7 @@ const createSendToken = (channel, statusCode, res) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
+  console.log(req.body)
   const newChannel = await Channel.create({
     channelUserName: req.body.channelUserName,
     channelPasswd: req.body.channelPasswd,
@@ -41,12 +42,12 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordConfirm: req.body.passwordConfirm,
     type: req.body.type
   });
-
   createSendToken(newChannel, 201, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
+  console.log("Cookies:-",req)
   //1) Check if Both email and password is provided
   if (!email || !password) {
     return next(new AppError('Please Provide both email and password', 400));

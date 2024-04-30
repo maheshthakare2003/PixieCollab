@@ -5,6 +5,8 @@ const cors = require('cors');
 const channelRouter = require('./Routes/channelRoutes');
 const editorRouter = require('./Routes/editorRoutes');
 const streamRouter = require('./Routes/streamingRoutes.js');
+const projectRouter = require('./Routes/projectRoutes');
+const Project = require("./Models/Project.js")
 
 const app = express();
 app.use(cors());
@@ -14,30 +16,32 @@ const io = require('socket.io')(httpServer);
 
 io.listen(5505);
 
-const secretFunction = (channelUsername, editorEmail) => {
-  return `${channelUsername}&${editorEmail}`;
-};
 
 io.on('connection', socket => {
-  socket.on('join', (channelUsername, editorEmail) => {
+  socket.on('join', ({channelUsername,editorUsername,roomId}) => {
+    if(!channelUsername || !editorUsername) return;
     //Get room Id
-    const roomId = secretFunction(channelUsername, editorEmail);
+    console.log('Hello World')
+    console.log(channelUsername, editorUsername)
+    console.log('Hello World')
+    // const roomId = secretFunction(channelUsername, editorUsername);
     //joing the current socket
     socket.join(roomId);
     //emit another event fot the other client
-    socket.emit('joinAlso', channelUsername, editorEmail);
+    io.emit('joinAlso', {channelUsername, editorUsername,roomId});
     //handle that in other event handler
   });
-  socket.on('finalJoin', (channelUsername, editorEmail) => {
-    const roomId = secretFunction(channelUsername, editorEmail);
+  socket.on('finalJoin', ({channelUsername, editorUsername,roomId}) => {
+    console.log(roomId," You joined!!")
+    if(!channelUsername || !editorUsername || roomId===null) return;
     socket.join(roomId);
+    console.log("Added")
   });
-  socket.on('sendMessage', (message, channelUsername, editorEmail) => {
-    //get room id
-    const roomId = secretFunction(channelUsername, editorEmail);
+  socket.on('sendMessage', ({message, channelUsername, editorUsername,sender,roomId}) => {
     //broadcast the message event to all the client in the fetched room
     console.log('You are heard,you said:', message);
-    io.to(roomId).emit('message', message, channelUsername, editorEmail);
+    console.log(roomId," Where data is sent!!")
+    io.to(roomId).emit('addMessage', {message, channelUsername, editorUsername,sender});
   });
 });
 
@@ -47,5 +51,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/channel', channelRouter);
 app.use('/editor', editorRouter);
 app.use('/stream', streamRouter);
+app.use('/project', projectRouter);
 
 module.exports = app;

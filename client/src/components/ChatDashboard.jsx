@@ -1,11 +1,220 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 const socket = io("127.0.0.1:5505");
 
-const ChatDashboard = () => {
+const ChatInterface = ({ currReceiver, projectId }) => {
+  const [messages, setMessages] = useState([]);
+  const [inputText, setInputText] = useState("");
+  const currUser = useSelector((state) => state.currUser);
+  const isEditor = useSelector((state) => state.isEditor);
+  const chatHistoryRef = React.useRef(null);
+
+  const handleInputChange = (e) => {
+    setInputText(e.target.value);
+  };
+
+  socket.on("addMessage", ({ message, sender }) => {
+    if (message === "") return;
+    console.log("You typed ,", message);
+    setMessages([...messages, { sender: sender, message: message }]);
+  });
+
+  const sendMessage = () => {
+    if (inputText.trim() === "") return;
+    if (isEditor) {
+      socket.emit("sendMessage", {
+        editorUsername: currUser.name,
+        channelUsername: currReceiver.name,
+        message: inputText,
+        sender: currUser.name,
+        roomId: projectId,
+      });
+    } else {
+      socket.emit("sendMessage", {
+        editorUsername: currReceiver.name,
+        channelUsername: currUser.name,
+        message: inputText,
+        sender: currUser.name,
+        roomId: projectId,
+      });
+    }
+    setInputText("");
+  };
+
+  useEffect(() => {
+    chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+  }, [messages]);
+
+  useEffect(() => {
+    chatHistoryRef.current.focus();
+  });
+
   return (
-    <div className="w-screen h-screen p-1 flex">
-     <h1>Hello World Lets Chat</h1>
+    <>
+      <div
+        id="chat-history"
+        ref={chatHistoryRef}
+        className="h-4/5 overflow-y-scroll mb-4 p-4 flex-col flex justify-between"
+        style={{
+          border: "1px solid #ddd",
+          borderRadius: "8px",
+          padding: "10px",
+        }}
+      >
+        {messages.map((msg, index) => (
+          <div key={index} className="message">
+            <span
+              className="sender"
+              style={{ color: "#aaa", marginRight: "5px" }}
+            >
+              {msg.sender}
+            </span>
+            : {msg.message}
+          </div>
+        ))}
+      </div>
+      <div className="flex">
+        <input
+          type="text"
+          value={inputText}
+          onChange={handleInputChange}
+          placeholder="Type a message..."
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              sendMessage();
+            }
+          }}
+          className="flex-grow px-2 py-1 rounded-l border border-gray-300"
+          style={{ borderTopLeftRadius: "8px", borderBottomLeftRadius: "8px" }}
+        />
+        <button
+          onClick={sendMessage}
+          className="px-4 py-1 bg-blue-500 text-white rounded-r"
+          style={{
+            borderTopRightRadius: "8px",
+            borderBottomRightRadius: "8px",
+          }}
+        >
+          Send
+        </button>
+      </div>
+    </>
+  );
+};
+
+const Friend = ({ friend, setCurrReceiver,setProjectId }) => {
+  const isEditor = useSelector((state) => state.isEditor);
+  const { channelUsername, editorUsername, projectId } = friend;
+
+  return (
+    <div
+      className="text-black cursor-pointer"
+      onClick={() => {
+        setProjectId(projectId);
+        if (isEditor) {
+          setCurrReceiver(channelUsername);
+          socket.emit("join", { ...friend, roomId:projectId });
+        } else {
+          setCurrReceiver(editorUsername);
+          socket.emit("join", { ...friend, roomId:projectId });
+        }
+      }}
+    >
+      <div className="p-2 m-1 border border-black rounded transform transition-transform hover:scale-105">
+        {isEditor ? (
+          <span>{channelUsername}:</span>
+        ) : (
+          <span>{editorUsername}:</span>
+        )}
+        <span className="ml-1 font-extrabold">{projectId}</span>
+      </div>
+    </div>
+  );
+};
+
+const ChatDashboard = () => {
+  const isLogin = useSelector((state) => state.isLogin);
+  const isEditor = useSelector((state) => state.isEditor);
+  const currUser = useSelector((state) => state.currUser);
+  const [currReceiver, setCurrReceiver] = useState(null);
+  const [friends, setFriends] = useState([]);
+  const [inputText, setInputText] = useState("");
+  const [projectId, setProjectId] = useState("");
+  const handleInputChange = (event) => {
+    setInputText(event.target.value);
+  };
+  const sendMessage = () => {
+    if (inputText.trim() === "") return;
+    setMessages([...messages, { sender: "You", message: inputText }]);
+    setInputText("");
+    // Call your backend or processing logic here
+  };
+
+  const nav = useNavigate();
+  useEffect(() => {
+    if (!isLogin) {
+      nav("/login");
+    }
+  });
+
+  socket.on("joinAlso", ({ channelUsername, editorUsername, roomId }) => {
+    if (
+      channelUsername === currUser?.name ||
+      editorUsername === currUser?.name
+    ) {
+      console.log("finalJoin Called");
+      socket.emit("finalJoin", { channelUsername, editorUsername, roomId });
+    }
+  });
+
+  useEffect(() => {
+    const func = async () => {
+      const res = await fetch("http://localhost:5501/project/get", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(
+          isEditor
+            ? { editor: currUser?.name, channel: null }
+            : { editor: null, channel: currUser?.name }
+        ),
+      });
+      const data = await res.json();
+      console.log(data.data);
+      setFriends(data.data);
+    };
+    func();
+  }, []);
+
+  return (
+    <div className="h-screen w-screen flex flex-row">
+      <div className="w-1/3 h-full overflow-y-auto">
+        {friends.length === 0 ? (
+          <div className="p-4">You have no friends. How unfortunate!</div>
+        ) : (
+          friends.map((friend) => (
+            <Friend
+              friend={friend}
+              key={friend.id} // Use a unique identifier as the key
+              setCurrReceiver={setCurrReceiver}
+              setProjectId={setProjectId}
+            />
+          ))
+        )}
+      </div>
+      <div className="w-2/3 h-full flex flex-col">
+        {currReceiver && (
+          <>
+            <ChatInterface currReceiver={currReceiver} projectId={projectId} />
+          </>
+        )}
+      </div>
+      <div className="w-1/3 h-full">
+        <div className="p-2">Chatting with: {currReceiver}</div>
+      </div>
     </div>
   );
 };

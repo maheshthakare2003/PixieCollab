@@ -32,6 +32,7 @@ const createSendToken = (editor, statusCode, res) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
+  console.log(req.body);
   const newEditor = await Editor.create({
     name: req.body.name,
     email: req.body.email,
