@@ -10,17 +10,13 @@ const videoSchema = mongoose.Schema({
         type:String,
         required:true
     },
-    links:{
-        type:Object,
-        required:true
-    },
     url:{
         type:String,
         required:true
     },
     projectId: {
-        type: Schema.Types.ObjectId,
-        ref: 'Project'
+        type: String,
+        required: true
     }
 },{ minimize: false })//for empty object
 

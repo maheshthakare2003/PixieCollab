@@ -6,7 +6,7 @@ const channelRouter = require('./Routes/channelRoutes');
 const editorRouter = require('./Routes/editorRoutes');
 const streamRouter = require('./Routes/streamingRoutes.js');
 const projectRouter = require('./Routes/projectRoutes');
-const Project = require("./Models/Project.js")
+const videoRouter = require('./Routes/videoRoutes.js');
 
 const app = express();
 app.use(cors());
@@ -52,5 +52,6 @@ app.use('/channel', channelRouter);
 app.use('/editor', editorRouter);
 app.use('/stream', streamRouter);
 app.use('/project', projectRouter);
+app.use('/video',videoRouter);
 
 module.exports = app;

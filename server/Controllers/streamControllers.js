@@ -3,16 +3,17 @@ const Video = require("../Models/Video.js");
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 const { pipeline } = require("stream");
+const { exec } = require("child_process");
 
 const uploadToCloudinary = async (req, resp) => {
+  console.log("Hi Hello");
   try {
     cloudinary.config({
       cloud_name: process.env.cloud_name,
       api_key: process.env.api_key,
       api_secret: process.env.api_secret,
     });
-    const { name, description, links } = req.body;
-    console.log(name, description, links);
+    const { name, description, projectId } = req.body;
     console.log("started");
     const uploadResult = await new Promise((resolve, reject) => {
       cloudinary.uploader.upload_large(
@@ -30,39 +31,49 @@ const uploadToCloudinary = async (req, resp) => {
     const newVideo = new Video({
       name: name,
       description: description,
-      links: links,
+      projectId: projectId,
       url: uploadResult.secure_url,
     });
     await newVideo.save();
     console.log("Video Uploaded : ", uploadResult.secure_url);
     resp.json({ data: "Uploaded Successfully!!" });
   } catch (error) {
+    // console.log("Hwllorgkjb");
     console.error(error);
     resp.status(500).json({ error: error.message });
   }
 };
 
 const streamFromCloudinary = async (req, resp) => {
+  const { url, name } = req.body;
   try {
-    const f = async () => {
-      const { got } = await import("got");
-      console.log(got);
-      return got;
-    };
-    const got = await f();
-    const { url } = req.body;
-    const response = await got.stream(url);
-    const writeStream = fs.createWriteStream(
-      path.join(__dirname, "../../public/temp1.mp4")
-    );
-    const data = await pipeline(response, writeStream, () => {
-      console.log("cb is running ");
+    const videoPath = url;
+    const outputPath = `./public/uploads/${name}`;
+    const hlsPath = `${outputPath}/index.m3u8`;
+    console.log("hlsPath", hlsPath);
+
+    if (!fs.existsSync(outputPath)) {
+      fs.mkdirSync(outputPath, { recursive: true });
+    }
+
+    const ffmpegCommand = `ffmpeg -i ${videoPath} -codec:v libx264 -codec:a aac -hls_time 10 -hls_playlist_type vod -hls_segment_filename "${outputPath}/segment%03d.ts" -start_number 0 ${hlsPath}`;
+
+    exec(ffmpegCommand, (error, stdout, stderr) => {
+      if (error) {
+        console.log(`exec error: ${error}`);
+      }
+      console.log(`stdout: ${stdout}`);
+      console.log(`stderr: ${stderr}`);
+      const videoUrl = `http://localhost:5501/uploads/${name}/index.m3u8`;
+
+      resp.json({
+        message: "Video converted to HLS format",
+        videoUrl: videoUrl,
+      });
     });
-    console.log("streaming successfully");
-    resp.status(200).json({ data: "Streaming Successfully", value: data });
   } catch (error) {
-    console.error(error);
-    resp.status(500).json({ error: error.message });
+    console.log(error);
+    resp.status(301).json({ error: error.message });
   }
 };
 

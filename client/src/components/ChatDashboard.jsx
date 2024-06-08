@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
+import VideoPlayer from "./VideoPlayer";
+import { useRef } from "react";
+
 const socket = io("127.0.0.1:5505");
 
 const ChatInterface = ({ currReceiver, projectId }) => {
@@ -104,7 +107,7 @@ const ChatInterface = ({ currReceiver, projectId }) => {
   );
 };
 
-const Friend = ({ friend, setCurrReceiver,setProjectId }) => {
+const Friend = ({ friend, setCurrReceiver, setProjectId }) => {
   const isEditor = useSelector((state) => state.isEditor);
   const { channelUsername, editorUsername, projectId } = friend;
 
@@ -115,10 +118,10 @@ const Friend = ({ friend, setCurrReceiver,setProjectId }) => {
         setProjectId(projectId);
         if (isEditor) {
           setCurrReceiver(channelUsername);
-          socket.emit("join", { ...friend, roomId:projectId });
+          socket.emit("join", { ...friend, roomId: projectId });
         } else {
           setCurrReceiver(editorUsername);
-          socket.emit("join", { ...friend, roomId:projectId });
+          socket.emit("join", { ...friend, roomId: projectId });
         }
       }}
     >
@@ -138,6 +141,7 @@ const ChatDashboard = () => {
   const isLogin = useSelector((state) => state.isLogin);
   const isEditor = useSelector((state) => state.isEditor);
   const currUser = useSelector((state) => state.currUser);
+  const [videoLink, setVideoLink] = useState("");
   const [currReceiver, setCurrReceiver] = useState(null);
   const [friends, setFriends] = useState([]);
   const [inputText, setInputText] = useState("");
@@ -189,6 +193,57 @@ const ChatDashboard = () => {
     func();
   }, []);
 
+  const playerRef = useRef(null);
+  //to get videoLink I will need the url of the stored video for this project(from database using projectId) and also the name of video and also will need the
+
+  useEffect(() => {
+    const func = async () => {
+      const resp1 = await fetch(
+        `http://localhost:5501/video/get?projectId=${projectId}`,
+        { method: "GET" }
+      );
+      const Videop = await resp1.json();
+      const Video = Videop.video;
+      console.log(Video);
+      const resp2 = await fetch(`http://localhost:5501/stream/streaming`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...Video }),
+      });
+      const streamResp = await resp2.json();
+      console.log(streamResp);
+      setVideoLink(streamResp.videoUrl);
+    };
+    func();
+  }, [projectId]);
+
+  const videoPlayerOptions = {
+    controls: true,
+    responsive: true,
+    fluid: true,
+    sources: [
+      {
+        src: videoLink,
+        type: "application/x-mpegURL",
+      },
+    ],
+  };
+
+  const handlePlayerReady = (player) => {
+    playerRef.current = player;
+
+    // You can handle player events here, for example:
+    player.on("waiting", () => {
+      videojs.log("player is waiting");
+    });
+
+    player.on("dispose", () => {
+      videojs.log("player will dispose");
+    });
+  };
+
   return (
     <div className="h-screen w-screen flex flex-row">
       <div className="w-1/3 h-full overflow-y-auto">
@@ -212,8 +267,9 @@ const ChatDashboard = () => {
           </>
         )}
       </div>
-      <div className="w-1/3 h-full">
+      <div className="w-1/3 h-full" id="videojs">
         <div className="p-2">Chatting with: {currReceiver}</div>
+        <VideoPlayer options={videoPlayerOptions} onReady={handlePlayerReady} />
       </div>
     </div>
   );
