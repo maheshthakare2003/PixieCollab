@@ -137,6 +137,120 @@ const Friend = ({ friend, setCurrReceiver, setProjectId }) => {
   );
 };
 
+// const Form = ({projectId}) => {
+//   const [title,setTitle] = useState("");
+//   const [description,setDescription] = useState("");
+//   const handleUpload =async(e) =>{
+//     e.preventDefault();
+//     const resp1 = await fetch(
+//       `http://localhost:5501/video/get?projectId=${projectId}`,
+//       { method: "GET" }
+//     );
+//     const Videop = await resp1.json();
+//     const Video = Videop.video;
+//     const resp2 = await fetch(`http://localhost:5501/youtube/upload`,{
+//       method:POST,
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({
+//         title:title,
+//         description:description,
+//         cloudinaryUrl:Video.url}
+//       ),
+//     });
+//     const data = await resp2.json();
+//     if(data.ok){
+//       alert("Video Successfully Uploaded");
+//     }
+//     else{
+//       alert("Something went wrong")
+//     }
+//   }
+//   return(
+//     <form>
+//         <label htmlFor="title">Title</label>
+//         <input type="text" name="title" id="title" value = {title} onChange={(e)=>setTitle(e.target.value)}/>
+//         <label htmlFor="description">Description</label>
+//         <input type="text" name="description" id="description" value = {description} onChange={(e)=>setDescription(e.target.value)}/>
+//         <input type="submit" value="Upload" onClick={handleUpload}/>
+//     </form>
+//   )
+// }
+
+const Form = ({ projectId }) => {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+
+  const handleUpload = async (e) => {
+    e.preventDefault();
+    const resp1 = await fetch(
+      `http://localhost:5501/video/get?projectId=${projectId}`,
+      { method: "GET" }
+    );
+    const Videop = await resp1.json();
+    const Video = Videop.video;
+
+    const resp2 = await fetch(`http://localhost:5501/youtube/upload`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: title,
+        description: description,
+        cloudinaryUrl: Video.url,
+      }),
+    });
+
+    const data = await resp2.json();
+    if (data.ok) {
+      window.location = data.authUrl;
+    } else {
+      alert("Something went wrong");
+    }
+  }
+
+  return (
+    <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-md mx-auto" onSubmit={handleUpload}>
+      <div className="mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="title">
+          Title
+        </label>
+        <input
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          type="text"
+          name="title"
+          id="title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+      </div>
+      <div className="mb-6">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
+          Description
+        </label>
+        <input
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+          type="text"
+          name="description"
+          id="description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+      </div>
+      <div className="flex items-center justify-between">
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          type="submit"
+        >
+          Upload
+        </button>
+      </div>
+    </form>
+  );
+}
+
 const ChatDashboard = () => {
   const isLogin = useSelector((state) => state.isLogin);
   const isEditor = useSelector((state) => state.isEditor);
@@ -270,6 +384,9 @@ const ChatDashboard = () => {
       <div className="w-1/3 h-full" id="videojs">
         <div className="p-2">Chatting with: {currReceiver}</div>
         <VideoPlayer options={videoPlayerOptions} onReady={handlePlayerReady} />
+        {!isEditor?(
+          <Form projectId={projectId}/>
+        ):<div></div>}
       </div>
     </div>
   );
