@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/aomwankhede/PixieCollab#readme",
   "dependencies": {
+    "axios": "^1.7.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "cloudinary": "^1.41.3",
@@ -33,7 +34,8 @@
     "util": "^0.12.5",
     "uuid": "^9.0.1",
     "uuidv4": "^6.2.13",
-    "validator": "^13.11.0"
+    "validator": "^13.11.0",
+    "youtube-api": "^3.0.1"
   },
   "devDependencies": {
     "eslint": "^5.16.0",

@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const projectSchema = mongoose.Schema({
+    projectNamr:{
+        type: String,
+        required: true
+    },
     projectId: {
         type: String,
         required: true
