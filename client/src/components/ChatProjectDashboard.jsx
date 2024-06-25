@@ -341,8 +341,8 @@ const ChatProjectDashboard = ({ projectId }) => {
     <>
       <h1 className="text-3xl font-bold text-center text-gray-800 my-4">
         {isEditor
-          ? `${currProject?.name} of ${currProject?.channelUsername}`
-          : `${currProject?.name} by ${currProject?.editorUsername}`}
+          ? `${currProject?.projectName} of ${currProject?.channelUsername}`
+          : `${currProject?.projectName} by ${currProject?.editorUsername}`}
       </h1>
       <div className="h-screen w-screen flex flex-row">
         <div className="w-2/3 h-full bg-white p-4">

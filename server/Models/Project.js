@@ -1,24 +1,58 @@
+// const mongoose = require('mongoose');
+// const Schema = mongoose.Schema;
+
+// const projectSchema = mongoose.Schema({
+//     projectId: {
+//         type: String,
+//         required: true
+//     },
+//     editorUsername:{
+//         type: String,
+//         required: true
+//     },
+//     channelUsername:{
+//         type: String,
+//         required: true
+//     },
+//     name:{
+//         type:String,
+//         required: true
+//     }
+// },{ minimize: false })//for empty object
+
+// const Project = mongoose.model('Project', projectSchema);
+
+// module.exports = Project;
+
+
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const projectSchema = mongoose.Schema({
+const projectSchema = mongoose.Schema(
+  {
+    projectName: {
+      type: String
+    },
+    projectDescription: {
+      type: String
+    },
     projectId: {
-        type: String,
-        required: true
+      type: String
     },
-    editorUsername:{
-        type: String,
-        required: true
+    editorUsername: {
+      type: String,
+      required: true
     },
-    channelUsername:{
-        type: String,
-        required: true
+    channelUsername: {
+      type: String
     },
-    name:{
-        type:String,
-        required: true
+    isComplete: {
+      type: Boolean,
+      default: false
     }
-},{ minimize: false })//for empty object
+  },
+  { minimize: false }
+); //for empty object
 
 const Project = mongoose.model('Project', projectSchema);
 
