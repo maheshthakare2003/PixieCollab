@@ -1,24 +1,31 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const projectSchema = mongoose.Schema({
-    projectNamr:{
-        type: String,
-        required: true
+const projectSchema = mongoose.Schema(
+  {
+    projectName: {
+      type: String
+    },
+    projectDescription: {
+      type: String
     },
     projectId: {
-        type: String,
-        required: true
+      type: String
     },
-    editorUsername:{
-        type: String,
-        required: true
+    editorUsername: {
+      type: String,
+      required: true
     },
-    channelUsername:{
-        type: String,
-        required: true
+    channelUsername: {
+      type: String
+    },
+    isComplete: {
+      type: Boolean,
+      default: false
     }
-},{ minimize: false })//for empty object
+  },
+  { minimize: false }
+); //for empty object
 
 const Project = mongoose.model('Project', projectSchema);
 

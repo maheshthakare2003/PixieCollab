@@ -9,4 +9,5 @@ router
   .route('/updatePassword')
   .patch(editorAuthController.protect, editorAuthController.updatePassword);
 
+
 module.exports = router;
