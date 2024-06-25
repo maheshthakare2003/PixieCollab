@@ -86,6 +86,7 @@ const Login = () => {
       nav('/')
     } catch (error) {
       // Handle error (e.g., display error message)
+      console.log(error);
     }
   };
   useEffect(() => {
@@ -94,7 +95,7 @@ const Login = () => {
     }
   }, []);
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex justify-center items-center h-screen bg-orange-200">
       <div className="bg-gray-100 p-6 rounded shadow-md w-96">
         <h2 className="text-2xl font-bold mb-4">{login ? "Login" : "Sign Up"}</h2>
         <form onSubmit={handleSubmit}>
