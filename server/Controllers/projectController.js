@@ -43,6 +43,18 @@ const getProjects = async(req, res) => {
     }
 }
 
+const getByIdProject = async(req, res) => {
+    const {projectId} = req.body;
+    try{
+        const project = await Project.findOne({projectId:projectId});
+        res.status(200).json({data:project, ok:true})
+    }
+    catch(err){
+        console.log(err);
+        res.status(400).json({data:"Failed to Load", ok:false})
+    }
+}
+
 const deleteProject = async(req, res) => {
     const {projectId} = req.body;
     try{
@@ -54,4 +66,4 @@ const deleteProject = async(req, res) => {
         res.status(400).json({data:"Failed to Load", ok:false})
     }
 }
-module.exports = {addProject,getProjects,deleteProject};
+module.exports = {addProject,getProjects,deleteProject,getByIdProject};

@@ -136,48 +136,6 @@ const Friend = ({ friend, setCurrReceiver, setProjectId }) => {
     </div>
   );
 };
-
-// const Form = ({projectId}) => {
-//   const [title,setTitle] = useState("");
-//   const [description,setDescription] = useState("");
-//   const handleUpload =async(e) =>{
-//     e.preventDefault();
-//     const resp1 = await fetch(
-//       `http://localhost:5501/video/get?projectId=${projectId}`,
-//       { method: "GET" }
-//     );
-//     const Videop = await resp1.json();
-//     const Video = Videop.video;
-//     const resp2 = await fetch(`http://localhost:5501/youtube/upload`,{
-//       method:POST,
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({
-//         title:title,
-//         description:description,
-//         cloudinaryUrl:Video.url}
-//       ),
-//     });
-//     const data = await resp2.json();
-//     if(data.ok){
-//       alert("Video Successfully Uploaded");
-//     }
-//     else{
-//       alert("Something went wrong")
-//     }
-//   }
-//   return(
-//     <form>
-//         <label htmlFor="title">Title</label>
-//         <input type="text" name="title" id="title" value = {title} onChange={(e)=>setTitle(e.target.value)}/>
-//         <label htmlFor="description">Description</label>
-//         <input type="text" name="description" id="description" value = {description} onChange={(e)=>setDescription(e.target.value)}/>
-//         <input type="submit" value="Upload" onClick={handleUpload}/>
-//     </form>
-//   )
-// }
-
 const Form = ({ projectId }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");

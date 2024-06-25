@@ -46,6 +46,7 @@ const uploadToCloudinary = async (req, resp) => {
 
 const streamFromCloudinary = async (req, resp) => {
   const { url, name } = req.body;
+  console.log("url:-",url,"name:-",name);
   try {
     const videoPath = url;
     const outputPath = `./public/uploads/${name}`;

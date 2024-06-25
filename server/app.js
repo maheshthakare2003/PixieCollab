@@ -8,6 +8,7 @@ const streamRouter = require('./Routes/streamingRoutes.js');
 const projectRouter = require('./Routes/projectRoutes');
 const videoRouter = require('./Routes/videoRoutes.js');
 const oAuthRouter = require('./Routes/oauthRoute.js');
+const chatRouter = require('./Routes/chatRoutes.js')
 
 const app = express();
 app.use(cors());
@@ -55,5 +56,6 @@ app.use('/stream', streamRouter);
 app.use('/project', projectRouter);
 app.use('/video',videoRouter);
 app.use('/youtube',oAuthRouter);
+app.use('/chat',chatRouter);
 
 module.exports = app;

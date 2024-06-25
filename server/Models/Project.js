@@ -13,6 +13,10 @@ const projectSchema = mongoose.Schema({
     channelUsername:{
         type: String,
         required: true
+    },
+    name:{
+        type:String,
+        required: true
     }
 },{ minimize: false })//for empty object
 
