@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const EditorForm = () => {
+const VideoUpload = () => {
   const [file, setFile] = useState(null);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -81,4 +81,4 @@ const EditorForm = () => {
   );
 };
 
-export default EditorForm; 
+export default VideoUpload;

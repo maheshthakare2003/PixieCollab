@@ -9,7 +9,7 @@ const socket = io("127.0.0.1:5505");
 
 const ChatInterface = ({ currReceiver, projectId }) => {
   const [messages, setMessages] = useState([]);
-  const [newMessages,setNewMessages] = useState([]);
+  const [newMessages, setNewMessages] = useState([]);
   const newMessagesRef = useRef(newMessages);
   const [inputText, setInputText] = useState("");
   const currUser = useSelector((state) => state.currUser);
@@ -23,7 +23,6 @@ const ChatInterface = ({ currReceiver, projectId }) => {
   useEffect(() => {
     newMessagesRef.current = newMessages;
   }, [newMessages]);
-  
 
   useEffect(() => {
     socket.on("addMessage", ({ message, sender }) => {
@@ -43,7 +42,7 @@ const ChatInterface = ({ currReceiver, projectId }) => {
       message: inputText,
       sender: currUser.name,
       roomId: projectId,
-      projectId:projectId
+      projectId: projectId,
     };
     if (isEditor) {
       messageData.editorUsername = currUser.name;
@@ -68,46 +67,48 @@ const ChatInterface = ({ currReceiver, projectId }) => {
     }
   }, []);
 
-  useEffect(()=>{
-    const fetcher = async()=>{
-      const resp = await fetch(`http://localhost:5501/chat/fetch`,{
+  useEffect(() => {
+    const fetcher = async () => {
+      const resp = await fetch(`http://localhost:5501/chat/fetch`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          projectId:projectId
+          projectId: projectId,
         }),
-      })
+      });
       const res = await resp.json();
-      console.log(res)
+      console.log(res);
       setMessages(res?.data);
-    }
-    fetcher()
-    return () => {
-        console.log("I am going in adder")
-        const adder = async()=>{
-          const filtered =  newMessagesRef.current.filter((m)=>m.sender===currUser.name)
-          console.log("I am in adder",filtered)
-          const resp = await fetch(`http://localhost:5501/chat/add`,{
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              arr:filtered,
-              projectId:projectId
-            }),
-          })
-          const res = await resp.json();
-          console.log(res)
-          if(res?.ok!=true){
-            alert("Chat Not Saved!!")
-          }
-        }
-        adder()
     };
-  },[])
+    fetcher();
+    return () => {
+      console.log("I am going in adder");
+      const adder = async () => {
+        const filtered = newMessagesRef.current.filter(
+          (m) => m.sender === currUser.name
+        );
+        console.log("I am in adder", filtered);
+        const resp = await fetch(`http://localhost:5501/chat/add`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            arr: filtered,
+            projectId: projectId,
+          }),
+        });
+        const res = await resp.json();
+        console.log(res);
+        if (res?.ok != true) {
+          alert("Chat Not Saved!!");
+        }
+      };
+      adder();
+    };
+  }, []);
 
   return (
     <div className="flex flex-col" style={{ height: "80vh" }}>
@@ -119,8 +120,9 @@ const ChatInterface = ({ currReceiver, projectId }) => {
         {messages.map((msg, index) => (
           <div key={index} className="message">
             {console.log(msg)}
-            <span className="sender text-gray-400 mr-2">{msg.sender}</span>:{" "}
-            {msg.message}
+            <span className="sender text-gray-400 mr-2">
+              {msg.sender}
+            </span>: {msg.message}
           </div>
         ))}
       </div>
@@ -147,8 +149,6 @@ const ChatInterface = ({ currReceiver, projectId }) => {
     </div>
   );
 };
-
-
 
 const Form = ({ projectId }) => {
   const [title, setTitle] = useState("");
@@ -357,12 +357,11 @@ const ChatProjectDashboard = ({ projectId }) => {
                 options={videoPlayerOptions}
                 onReady={handlePlayerReady}
               />
-              
             )}
           </div>
           <div className="mb-4 h-1/2">
             {/* <h2 className="text-xl font-semibold text-center">{`Upload ${!isEditor?'to channel':'above'}`}</h2> */}
-            {isEditor?<EditorForm/>:<Form projectId={projectId} />}
+            {isEditor ? <EditorForm /> : <Form projectId={projectId} />}
           </div>
         </div>
       </div>
