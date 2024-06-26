@@ -65,7 +65,6 @@ const joinProject = async (req, res) => {
     if (!project) {
       return res.status(404).json({ error: 'Project not found' });
     }
-
     // Check if the project is already completed
     if (project.isComplete) {
       return res.status(400).json({ error: 'Project is already completed' });
