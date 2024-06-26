@@ -27,7 +27,7 @@ const router = createBrowserRouter(
       <Route path="" element={<HomePage/>}/>
       <Route path="about/" element={<About />} />
       <Route path="contact/" element={<Contact />} />
-      <Route path="chat/" element={<ChatProjectDashboard projectId = "editor1test12"/>} />
+      <Route path="chat/" element={<ChatProjectDashboard/>} />
       {/* <Route path="chat/" element={<ChatDashboard />} /> */}
       <Route path="login/" element={<Login />} />
     </Route>

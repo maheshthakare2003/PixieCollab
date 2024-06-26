@@ -9,7 +9,11 @@ import {
 } from "@material-tailwind/react";
 import { RiDeleteBin6Line } from "react-icons/ri"; // Import delete icon from React Icons
 import axios from "axios"; // Import axios for HTTP requests
-
+import {useNavigate} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import { useSelector } from "react-redux";
+import {setProjectId} from "../features/projectSlice";
+import store from "../app/store";
 export function BlogCard({
   projectName,
   projectDescription,
@@ -21,7 +25,7 @@ export function BlogCard({
   onDelete, // Add onDelete prop for handling delete action
 }) {
   const [isHovered, setIsHovered] = useState(false);
-
+  console.log(useSelector((state)=>state))
   const handleMouseEnter = () => {
     setIsHovered(true);
   };
@@ -56,12 +60,19 @@ export function BlogCard({
     }
   };
 
+  const nav = useNavigate();
+  const dispatch = useDispatch();
+  const handleCardClick = () => {
+    dispatch(setProjectId(projectId));
+    nav("/chat");
+  };
   return (
     <Card
       className="max-w-[20rem] overflow-hidden flex flex-col h-full"
       style={cardStyle}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onClick={handleCardClick}
     >
       <CardBody className={`p-4 flex-1 ${!isComplete ? "bg-yellow-50" : ""}`}>
         <Typography variant="h5" color="blue-gray">

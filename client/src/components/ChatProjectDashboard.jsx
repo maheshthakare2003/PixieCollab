@@ -12,8 +12,9 @@ const ChatInterface = ({ currReceiver, projectId }) => {
   const [newMessages, setNewMessages] = useState([]);
   const newMessagesRef = useRef(newMessages);
   const [inputText, setInputText] = useState("");
-  const currUser = useSelector((state) => state.currUser);
-  const isEditor = useSelector((state) => state.isEditor);
+  const currUser = useSelector((state) => state.currUser.currUser);
+  const isEditor = useSelector((state) => state.currUser.isEditor);
+  const currProjectId = useSelector((state) => state.currProject.projectId);
   const chatHistoryRef = useRef(null);
 
   const handleInputChange = (e) => {
@@ -153,7 +154,7 @@ const ChatInterface = ({ currReceiver, projectId }) => {
 const Form = ({ projectId }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const isEditor = useSelector((state) => state.isEditor);
+  const isEditor = useSelector((state) => state.currUser.isEditor);
 
   const handleUpload = async (e) => {
     e.preventDefault();
@@ -233,10 +234,11 @@ const Form = ({ projectId }) => {
   );
 };
 
-const ChatProjectDashboard = ({ projectId }) => {
-  const isEditor = useSelector((state) => state.isEditor);
-  const isLogin = useSelector((state) => state.isLogin);
-  const currUser = useSelector((state) => state.currUser);
+const ChatProjectDashboard = () => {
+  const projectId = useSelector((state) => state.currProject.projectId);
+  const isEditor = useSelector((state) => state.currUser.isEditor);
+  const isLogin = useSelector((state) => state.currUser.isLogin);
+  const currUser = useSelector((state) => state.currUser.currUser);
   const [currProject, setCurrProject] = useState(null);
   const [videoLink, setVideoLink] = useState("");
   const [currReceiver, setCurrReceiver] = useState(null);

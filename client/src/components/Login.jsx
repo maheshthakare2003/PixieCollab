@@ -6,7 +6,7 @@ import {intialize} from "../features/userSlice.js"
 const Login = () => {
   const dispatch = useDispatch();
   const nav = useNavigate();
-  const isLogin = useSelector((state) => state.isLogin);
+  const isLogin = useSelector((state) => state.currUser.isLogin);
   const [login, setLogin] = useState(true);
   const [formData, setFormData] = useState({
     email: "",

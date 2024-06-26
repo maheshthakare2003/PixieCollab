@@ -9,9 +9,9 @@ import ChannelHomePage from "./ChannelHomePage.jsx";
 const HomePage = () => {
   const dispatch = useDispatch();
   const nav = useNavigate();
-  const currUser = useSelector((state) => state.currUser);
-  const isEditor = useSelector((state) => state.isEditor);
-  const isLogin = useSelector((state) => state.isLogin);
+  const currUser = useSelector((state) => state.currUser.currUser);
+  const isEditor = useSelector((state) => state.currUser.isEditor);
+  const isLogin = useSelector((state) => state.currUser.isLogin);
 
   useEffect(() => {
     if (!isLogin) {

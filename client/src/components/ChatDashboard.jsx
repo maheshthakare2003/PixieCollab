@@ -10,8 +10,8 @@ const socket = io("127.0.0.1:5505");
 const ChatInterface = ({ currReceiver, projectId }) => {
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState("");
-  const currUser = useSelector((state) => state.currUser);
-  const isEditor = useSelector((state) => state.isEditor);
+  const currUser = useSelector((state) => state.currUser.currUser);
+  const isEditor = useSelector((state) => state.currUser.isEditor);
   const chatHistoryRef = React.useRef(null);
 
   const handleInputChange = (e) => {
@@ -108,7 +108,7 @@ const ChatInterface = ({ currReceiver, projectId }) => {
 };
 
 const Friend = ({ friend, setCurrReceiver, setProjectId }) => {
-  const isEditor = useSelector((state) => state.isEditor);
+  const isEditor = useSelector((state) => state.currUser.isEditor);
   const { channelUsername, editorUsername, projectId } = friend;
 
   return (
@@ -210,9 +210,9 @@ const Form = ({ projectId }) => {
 }
 
 const ChatDashboard = () => {
-  const isLogin = useSelector((state) => state.isLogin);
-  const isEditor = useSelector((state) => state.isEditor);
-  const currUser = useSelector((state) => state.currUser);
+  const isLogin = useSelector((state) => state.currUser.isLogin);
+  const isEditor = useSelector((state) => state.currUser.isEditor);
+  const currUser = useSelector((state) => state.currUser.currUser);
   const [videoLink, setVideoLink] = useState("");
   const [currReceiver, setCurrReceiver] = useState(null);
   const [friends, setFriends] = useState([]);

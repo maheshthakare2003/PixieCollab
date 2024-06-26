@@ -5,7 +5,7 @@ import axios from "axios";
 import { BlogCard } from "./Card";
 
 const ChannelHomePage = () => {
-  const currUser = useSelector((state) => state.currUser);
+  const currUser = useSelector((state) => state.currUser.currUser);
 
   // State to hold the fetched projects
   const [projects, setProjects] = useState([]);
