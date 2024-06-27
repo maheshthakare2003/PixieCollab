@@ -112,16 +112,16 @@ const ChatInterface = ({ currReceiver, projectId }) => {
   }, []);
 
   return (
-    <div className="flex flex-col" style={{ height: "80vh" }}>
+    <div className="flex flex-col " style={{ height: "90vh" }}>
       <div
         id="chat-history"
         ref={chatHistoryRef}
-        className="max-h-full flex-grow overflow-y-scroll mb-4 p-4 border border-gray-300 rounded-lg"
+        className="max-h-full bg-gray-300 flex-grow overflow-y-scroll mb-4 p-4 border border-gray-700 rounded-lg"
       >
         {messages.map((msg, index) => (
-          <div key={index} className="message">
-            {console.log(msg)}
-            <span className="sender text-gray-400 mr-2">
+          <div key={index} className="message text-white-400 mr-2">
+            {/* {console.log(msg)} */}
+            <span className="sender text-black-400 mr-2 font-bold">
               {msg.sender}
             </span>: {msg.message}
           </div>
@@ -187,7 +187,7 @@ const Form = ({ projectId }) => {
   const handleUpload2 = () => {};
   return (
     <form
-      className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-md mx-auto"
+      className="rounded px-4 pt-6 pb-8 mb-4  mx-auto"
       onSubmit={isEditor ? handleUpload2 : handleUpload}
     >
       <div className="mb-4">
@@ -201,6 +201,7 @@ const Form = ({ projectId }) => {
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           type="text"
           name="title"
+          placeholder="Title"
           id="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -218,13 +219,14 @@ const Form = ({ projectId }) => {
           type="text"
           name="description"
           id="description"
+          placeholder="Enter a description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
       </div>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-center">
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           type="submit"
         >
           Upload
@@ -341,18 +343,18 @@ const ChatProjectDashboard = () => {
 
   return (
     <>
-      <h1 className="text-3xl font-bold text-center text-gray-800 my-4">
+      <h1 className="bg-orange-400 p-4 mx-auto my-5 max-w-lg rounded-lg shadow-md text-center animate-fadeInUp text-white text-3xl font-bold mb-2">
         {isEditor
           ? `${currProject?.projectName} of ${currProject?.channelUsername}`
           : `${currProject?.projectName} by ${currProject?.editorUsername}`}
       </h1>
-      <div className="h-screen w-screen flex flex-row">
-        <div className="w-2/3 h-full bg-white p-4">
+      <div className="h-screen w-screen p-2 flex flex-row">
+        <div className="w-2/3  h-full">
           <div className="mb-4">
             <ChatInterface currReceiver={currReceiver} projectId={projectId} />
           </div>
         </div>
-        <div className="w-1/3 h-full bg-white p-4">
+        <div className="w-1/3 h-full">
           <div className="mb-4 h-1/2">
             {videoLink && (
               <VideoPlayer

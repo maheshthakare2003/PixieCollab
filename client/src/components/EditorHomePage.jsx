@@ -5,7 +5,7 @@ import axios from "axios";
 import { BlogCard } from "./Card";
 
 const EditorHomePage = () => {
-  const currUser = useSelector((state) => state.currUser.currUser);
+  const currUser = useSelector((state) => state.currUser?.currUser);
 
   // State to hold the fetched projects
   const [projects, setProjects] = useState([]);
@@ -23,7 +23,7 @@ const EditorHomePage = () => {
     // Fetch data when component mounts
     axios
       .post("http://localhost:5501/project/get", {
-        editor: currUser.name,
+        editor: currUser?.name,
       })
       .then((response) => {
         setProjects(response.data.data);
@@ -31,10 +31,10 @@ const EditorHomePage = () => {
       .catch((error) => {
         console.error("Error fetching projects:", error);
       });
-  }, [currUser.name]); // Trigger the effect when currUser.name changes
+  }, [currUser?.name]); // Trigger the effect when currUser?.name changes
 
   // const handleJoinProject = (projectId) => {
-  //   const editorUsername = currUser.name;
+  //   const editorUsername = currUser?.name;
   //   axios
   //     .post("http://localhost:5501/project/join", {
   //       projectId,
@@ -56,7 +56,7 @@ const EditorHomePage = () => {
   // };
 
   const handleJoinProject = (projectId) => {
-    const editorUsername = currUser.name;
+    const editorUsername = currUser?.name;
     axios
       .post("http://localhost:5501/project/join", {
         projectId,
@@ -65,7 +65,7 @@ const EditorHomePage = () => {
         // Fetch updated list of projects after join
         axios
           .post("http://localhost:5501/project/get", {
-            editor: currUser.name,
+            editor: currUser?.name,
           })
           .then((response) => {
             setProjects(response.data.data); // Update projects state with new data
@@ -115,7 +115,7 @@ const EditorHomePage = () => {
       {/* Existing JSX code for header and project cards */}
       <div className="bg-orange-400 p-4 mx-auto my-5 max-w-lg rounded-lg shadow-md text-center">
         <h1 className="animate-fadeInUp text-white text-3xl font-bold mb-2">
-          Welcome, {currUser.name}!
+          Welcome, {currUser?.name}!
         </h1>
         <p className="animate-fadeInUp text-gray-800 text-base">
           Exciting projects await your editing mastery!
@@ -136,6 +136,7 @@ const EditorHomePage = () => {
               />
             </div>
           ))} */}
+          {console.log(projects)}
           {projects
   .filter((project) => project.isComplete)
   .map((project) => (

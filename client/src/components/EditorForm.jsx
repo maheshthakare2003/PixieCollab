@@ -32,13 +32,13 @@ const EditorForm = () => {
   };
 
   return (
-    <div className="max-w-lg mx-auto p-6 bg-gray-100 shadow-md rounded-md">
-      <form onSubmit={handleSubmit} className="flex flex-col">
+    <div className=" m-2 bg-gray-100 shadow-md rounded-md">
+      <form onSubmit={handleSubmit} className="flex flex-col bg-gray-300">
         <input
           type="file"
           onChange={(e) => setFile(e.target.files[0])}
           name="file"
-          className="mb-4 p-2 border border-gray-300 rounded-md"
+          className="mb-4 p-1 border border-gray-500 rounded-md  bg-gray-300"
         />
         <input
           type="text"
@@ -46,7 +46,7 @@ const EditorForm = () => {
           onChange={(e) => setName(e.target.value)}
           name="name"
           placeholder="Video Name"
-          className="mb-4 p-2 border border-gray-300 rounded-md"
+          className="mb-4 p-1 border border-gray-500 bg-gray-300 rounded-md"
         />
         <input
           type="text"
@@ -54,7 +54,7 @@ const EditorForm = () => {
           onChange={(e) => setProjectId(e.target.value)}
           name="projectId"
           placeholder="Project ID"
-          className="mb-4 p-2 border border-gray-300 rounded-md"
+          className="mb-4 p-1 border border-gray-500 bg-gray-300 rounded-md"
         />
         <input
           type="text"
@@ -62,12 +62,12 @@ const EditorForm = () => {
           onChange={(e) => setDescription(e.target.value)}
           name="description"
           placeholder="Video Description"
-          className="mb-4 p-2 border border-gray-300 rounded-md"
+          className="mb-4 p-1 border border-gray-500 bg-gray-300 rounded-md"
         />
         <input
           type="submit"
           value="Upload"
-          className="mb-4 p-2 bg-green-500 text-white rounded-md cursor-pointer hover:bg-green-600"
+          className="mb-4 p-1 bg-green-500 text-white rounded-md cursor-pointer hover:bg-green-600"
         />
       </form>
       {/* <h1 className="text-center text-2xl font-semibold text-gray-700 mb-6">

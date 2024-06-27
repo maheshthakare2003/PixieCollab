@@ -5,7 +5,7 @@ import axios from "axios";
 import { BlogCard } from "./Card";
 
 const ChannelHomePage = () => {
-  const currUser = useSelector((state) => state.currUser.currUser);
+  const currUser = useSelector((state) => state.currUser?.currUser);
 
   // State to hold the fetched projects
   const [projects, setProjects] = useState([]);
@@ -25,7 +25,7 @@ const ChannelHomePage = () => {
     // Fetch data when component mounts
     axios
       .post("http://localhost:5501/project/get", {
-        channel: currUser.name,
+        channel: currUser?.name,
       })
       .then((response) => {
         setProjects(response.data.data);
@@ -33,14 +33,14 @@ const ChannelHomePage = () => {
       .catch((error) => {
         console.error("Error fetching projects:", error);
       });
-  }, [currUser.name]); // Trigger the effect when currUser.name changes
+  }, [currUser?.name]); // Trigger the effect when currUser?.name changes
 
   const handleCreateProject = (data) => {
     axios
       .post("http://localhost:5501/project/add", {
         projectName: data.projectName,
         projectDescription: data.projectDescription,
-        channel: currUser.name,
+        channel: currUser?.name,
         editor: data.editorUsername,
       })
       .then((response) => {
@@ -93,7 +93,7 @@ const ChannelHomePage = () => {
       {/* Existing JSX code for header and project cards */}
       <div className="bg-orange-400 p-4 mx-auto my-5 max-w-lg rounded-lg shadow-md text-center">
         <h1 className="animate-fadeInUp text-white text-3xl font-bold mb-2">
-          Welcome, {currUser.name}!
+          Welcome, {currUser?.name}!
         </h1>
         <p className="animate-fadeInUp text-gray-800 text-base">
         Transforming raw footage into polished perfection🎬

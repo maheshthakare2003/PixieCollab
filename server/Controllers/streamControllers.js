@@ -28,13 +28,33 @@ const uploadToCloudinary = async (req, resp) => {
         }
       );
     });
-    const newVideo = new Video({
-      name: name,
-      description: description,
-      projectId: projectId,
-      url: uploadResult.secure_url
+    const respo = await fetch(`http://localhost:5501/video/get?projectId=${projectId}`,{
+      method:"GET",
+      headers:{
+        "Content-Type":"application/json"
+      }
     });
-    await newVideo.save();
+    const pastVide = await respo.json();
+    const pastVideo = pastVide.video;
+    if(pastVideo){
+      console.log("PastVideo:-");
+      console.log(pastVideo);
+    
+      // Assuming `pastVideo` has an `_id` field or some other unique identifier
+      const filter = { _id: pastVideo._id };
+      const update = { url: uploadResult.secure_url };
+    
+      await Video.updateOne(filter, update);
+    }
+    else{
+      const newVideo = new Video({
+        name: name,
+        description: description,
+        projectId: projectId,
+        url: uploadResult.secure_url
+      });
+      await newVideo.save();
+    }
     console.log('Video Uploaded : ', uploadResult.secure_url);
     resp.json({ data: 'Uploaded Successfully!!' });
   } catch (error) {

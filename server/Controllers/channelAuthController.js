@@ -61,7 +61,7 @@ exports.login = catchAsync(async (req, res, next) => {
     !channel ||
     !(await channel.correctPassword(password, channel.password))
   ) {
-    next(new AppError('Invalid email or password', 401));
+    return next(new AppError('Invalid email or password', 401));
   }
   //3)if everything is okay , send token to client
   createSendToken(channel, 200, res);

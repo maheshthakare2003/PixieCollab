@@ -91,7 +91,9 @@ const getProjects = async (req, res) => {
   // console.log("nandn",editor, channel);
   try {
     if (editor) {
+      console.log("Eddie ",editor)
       const projects = await Project.find({ editorUsername: editor });
+      console.log("Eddie ",projects)
       res.status(200).json({ data: projects, ok: true });
     } else {
       const projects = await Project.find({ channelUsername: channel });

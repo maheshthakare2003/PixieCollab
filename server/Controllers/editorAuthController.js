@@ -53,7 +53,7 @@ exports.login = catchAsync(async (req, res, next) => {
   const editor = await Editor.findOne({ email: email }).select('+password'); //password is hidden that's why explicitly mentioned to show it
 
   if (!editor || !(await editor.correctPassword(password, editor.password))) {
-    next(new AppError('Invalid email or password', 401));
+    return next(new AppError('Invalid email or password', 401));
   }
   //3)if everything is okay , send token to client
   createSendToken(editor, 200, res);
