@@ -22,7 +22,7 @@ app.use(cors(corsOptions));
 const httpServer = require('http').createServer(app);
 const io = require('socket.io')(httpServer);
 
-io.listen(5505);
+io.listen(5505||process.env.SocketPort);
 
 io.on('connection', socket => {
   socket.on('join', ({ channelUsername, editorUsername, roomId }) => {
