@@ -17,7 +17,7 @@ const DB = process.env.DATABASE.replace(
   "<PASSWORD>",
   process.env.DATABASE_PASSWORD
 );
-mongoose.connect(DB).then(() => console.log("DB connection established"));
+mongoose.connect("mongodb+srv://aom:A1o1m2003@cluster0.alagjbz.mongodb.net/PixieCollab?retryWrites=true&w=majority").then(() => console.log("DB connection established"));
 
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
 app.use(cors());
